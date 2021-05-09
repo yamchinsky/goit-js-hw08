@@ -4,8 +4,8 @@ const galleryNode = document.querySelector('.js-gallery');
 const lightBoxNode = document.querySelector('.js-lightbox');
 
 const boxImageNode = document.querySelector('.lightbox__image');
-const buttonNode = document.querySelector('.lightbox__button');
-const overlayNode = document.querySelector('.lightbox__overlay');
+const closeBtn = document.querySelector('.lightbox__button');
+const closeOverlay = document.querySelector('.lightbox__overlay');
 
 const elements = galleryItems.map((image, idx) => 
     
@@ -49,7 +49,6 @@ const elements = galleryItems.map((image, idx) =>
     
 
 ).join("");
-console.log(elements);
 
 galleryNode.insertAdjacentHTML("beforeend", elements);
 
@@ -62,51 +61,18 @@ galleryNode.addEventListener("click", (evt) => {
     if (evt.target.tagName !== "IMG")
     return;
     lightBoxNode.classList.add("is-open");
-    boxImageNode.src = evt.target.dataset.source;
-    boxImageNode.alt = evt.target.alt;
+      
+    isOpen();
+    
+
+    resetImg(evt.target.dataset.source, evt.target.alt)
+
     indexImg = +evt.target.dataset.idx;
-    console.log(indexImg);
 
-    window.addEventListener("keydown", ((evt) => {
-
-        const ESC_KEY_CODE = "Escape";
-        const arrowRight = "ArrowRight";
-        const arrowLeft = "ArrowLeft";
-        
-        
-        
-        if (evt.code === arrowRight) {
-            indexImg += 1;
-            if (indexImg === galleryItems.length ) {
-                indexImg = 0;
-            };
-            resetImg(galleryItems[indexImg].original, galleryItems[indexImg].description);
-        };
-        if (evt.code === arrowLeft) {
-            indexImg -= 1;
-            if (indexImg === - 1) {
-                indexImg = galleryItems.length -1;
-            };
-            resetImg(galleryItems[indexImg].original, galleryItems[indexImg].description);
-        };
-
-        
-        
-
-        if (evt.code === ESC_KEY_CODE) {
-            closeItems();
-        };
-
-
-
-
-        return;
-    }))
     return boxImageNode;
 });
 
-
-buttonNode.addEventListener("click", ((evt) => {
+closeBtn.addEventListener("click", ((evt) => {
     
     if (evt.target.tagName === "BUTTON") {
         closeItems();
@@ -115,7 +81,7 @@ buttonNode.addEventListener("click", ((evt) => {
     return;
 }));
 
-overlayNode.addEventListener("click", ((evt) => {
+closeOverlay.addEventListener("click", ((evt) => {
     
     if (evt.target.tagName === "DIV") {
         closeItems();
@@ -124,7 +90,6 @@ overlayNode.addEventListener("click", ((evt) => {
     return;
 
 }));
-
 
 function closeItems() {
     
@@ -137,8 +102,43 @@ function resetImg(src = "", alt = "") {
     boxImageNode.alt = alt;  
 };
 
+function isOpen() {
+    window.addEventListener("keydown", ((evt) => {
+    
+    
+    const ESC_KEY_CODE = "Escape";
+    const arrowRight = "ArrowRight";
+    const arrowLeft = "ArrowLeft";
+    
+    
+    
+    if (evt.code === arrowRight) {
+        indexImg += 1;
+        if (indexImg > galleryItems.length -1 ) {
+            indexImg = 0;
+        };
+        
+    };
+    if (evt.code === arrowLeft) {
+        indexImg -= 1;
+        if (indexImg < 0) {
+            indexImg = galleryItems.length -1;
+        };
+        
+        };
+    if (evt.code === ESC_KEY_CODE) {
+    closeItems();
+
+    }
+ 
+    
 
 
+    resetImg(galleryItems[indexImg].original, galleryItems[indexImg].description);
+
+    return;
+}))
+};
 
 
 
